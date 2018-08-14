@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hello">Hello World, HelloView!</string>
+    <string name="app_name">Tritin</string>
+    <string name="targetAccountLabel">Account Name</string>
+    <string name="accountBillingStreetLabel">Billing Street</string>
+    <string name="accountBillingCityLabel">Billing City</string>
+    <string name="accountBillingStateLabel">Billing State</string>
+    <string name="save">Save</string>
+    <!--  <string name="oAuthUrl">https://veloxyapptest-dev-ed.my.salesforce.com</string>
+    <string name="callbackUrl">https://veloxyapptest-dev-ed.my.salesforce.com/a00/o</string>-->
+
+    <string name="oAuthUrl">https://login.salesforce.com</string>
+    <string name="consumerKey">3MVG9d8..z.hDcPKbrFlvnCwkMoBYTDUFD4m_jvKXKkr5JA.OKyHh_RJJwFl9aC6FKlYGyOgp0otBZD30w8gF</string>
+    <!--<string name="callbackUrl">sfdcsample:success</string></resources>-->
+    <string name="callbackUrl">https://login.salesforce.com/services/oauth2/callback</string>
+
+
+    <string name="app_repo">https://github.com/mthli/Knife</string>
+
+    <!-- Menu -->
+    <string name="menu_undo">Undo</string>
+    <string name="menu_redo">Redo</string>
+    <string name="menu_github">GitHub</string>
+    <string name="notificationticker">Notification Ticker</string>
+    <!-- Dialog -->
+    <string name="dialog_title">Insert link</string>
+    <string name="dialog_edit_hint">http(s)://</string>
+    <string name="dialog_button_ok">OK</string>
+    <string name="dialog_button_cancel">Cancel</string>
+
+    <!-- Toast -->
+    <string name="toast_bold">Bold</string>
+    <string name="toast_italic">Italic</string>
+    <string name="toast_underline">Underline</string>
+    <string name="toast_strikethrough">Strikethrough</string>
+    <string name="toast_bullet">Bullet</string>
+    <string name="toast_quote">Quote</string>
+    <string name="toast_insert_link">Insert link</string>
+    <string name="toast_format_clear">Format clear</string>
+
+</resources>

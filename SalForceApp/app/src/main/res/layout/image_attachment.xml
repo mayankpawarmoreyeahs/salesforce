@@ -1,0 +1,23 @@
+<LinearLayout android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ImageView
+        android:id="@+id/thubnail"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_margin="10dp"
+        android:text="Inserted Image Display Here"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Image Inserted"
+        android:textSize="20dp"
+        android:id="@+id/image_name"
+        android:layout_gravity="center"/>
+
+
+
+</LinearLayout>
