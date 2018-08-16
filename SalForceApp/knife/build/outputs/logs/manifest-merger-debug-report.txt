@@ -1,45 +1,45 @@
 -- Merging decision tree log ---
 manifest
-ADDED from C:\mayank project\SalForceApp\knife\src\main\AndroidManifest.xml:17:1-25:12
-INJECTED from C:\mayank project\SalForceApp\knife\src\main\AndroidManifest.xml:17:1-25:12
-INJECTED from C:\mayank project\SalForceApp\knife\src\main\AndroidManifest.xml:17:1-25:12
-INJECTED from C:\mayank project\SalForceApp\knife\src\main\AndroidManifest.xml:17:1-25:12
-INJECTED from C:\mayank project\SalForceApp\knife\src\main\AndroidManifest.xml:17:1-25:12
-INJECTED from C:\mayank project\SalForceApp\knife\src\main\AndroidManifest.xml:17:1-25:12
-INJECTED from C:\mayank project\SalForceApp\knife\src\main\AndroidManifest.xml:17:1-25:12
+ADDED from C:\Users\User.MDEVPC-40\Desktop\salesforce\SalForceApp\knife\src\main\AndroidManifest.xml:17:1-25:12
+INJECTED from C:\Users\User.MDEVPC-40\Desktop\salesforce\SalForceApp\knife\src\main\AndroidManifest.xml:17:1-25:12
+INJECTED from C:\Users\User.MDEVPC-40\Desktop\salesforce\SalForceApp\knife\src\main\AndroidManifest.xml:17:1-25:12
+INJECTED from C:\Users\User.MDEVPC-40\Desktop\salesforce\SalForceApp\knife\src\main\AndroidManifest.xml:17:1-25:12
+INJECTED from C:\Users\User.MDEVPC-40\Desktop\salesforce\SalForceApp\knife\src\main\AndroidManifest.xml:17:1-25:12
+INJECTED from C:\Users\User.MDEVPC-40\Desktop\salesforce\SalForceApp\knife\src\main\AndroidManifest.xml:17:1-25:12
+INJECTED from C:\Users\User.MDEVPC-40\Desktop\salesforce\SalForceApp\knife\src\main\AndroidManifest.xml:17:1-25:12
 	package
-		ADDED from C:\mayank project\SalForceApp\knife\src\main\AndroidManifest.xml:17:11-42
-		INJECTED from C:\mayank project\SalForceApp\knife\src\main\AndroidManifest.xml
-		INJECTED from C:\mayank project\SalForceApp\knife\src\main\AndroidManifest.xml
+		ADDED from C:\Users\User.MDEVPC-40\Desktop\salesforce\SalForceApp\knife\src\main\AndroidManifest.xml:17:11-42
+		INJECTED from C:\Users\User.MDEVPC-40\Desktop\salesforce\SalForceApp\knife\src\main\AndroidManifest.xml
+		INJECTED from C:\Users\User.MDEVPC-40\Desktop\salesforce\SalForceApp\knife\src\main\AndroidManifest.xml
 	android:versionName
-		INJECTED from C:\mayank project\SalForceApp\knife\src\main\AndroidManifest.xml
-		ADDED from C:\mayank project\SalForceApp\knife\src\main\AndroidManifest.xml:17:1-25:12
-		INJECTED from C:\mayank project\SalForceApp\knife\src\main\AndroidManifest.xml
+		INJECTED from C:\Users\User.MDEVPC-40\Desktop\salesforce\SalForceApp\knife\src\main\AndroidManifest.xml
+		ADDED from C:\Users\User.MDEVPC-40\Desktop\salesforce\SalForceApp\knife\src\main\AndroidManifest.xml:17:1-25:12
+		INJECTED from C:\Users\User.MDEVPC-40\Desktop\salesforce\SalForceApp\knife\src\main\AndroidManifest.xml
 	android:versionCode
-		INJECTED from C:\mayank project\SalForceApp\knife\src\main\AndroidManifest.xml
-		ADDED from C:\mayank project\SalForceApp\knife\src\main\AndroidManifest.xml:17:1-25:12
-		INJECTED from C:\mayank project\SalForceApp\knife\src\main\AndroidManifest.xml
+		INJECTED from C:\Users\User.MDEVPC-40\Desktop\salesforce\SalForceApp\knife\src\main\AndroidManifest.xml
+		ADDED from C:\Users\User.MDEVPC-40\Desktop\salesforce\SalForceApp\knife\src\main\AndroidManifest.xml:17:1-25:12
+		INJECTED from C:\Users\User.MDEVPC-40\Desktop\salesforce\SalForceApp\knife\src\main\AndroidManifest.xml
 	xmlns:android
-		ADDED from C:\mayank project\SalForceApp\knife\src\main\AndroidManifest.xml:18:11-69
+		ADDED from C:\Users\User.MDEVPC-40\Desktop\salesforce\SalForceApp\knife\src\main\AndroidManifest.xml:18:11-69
 application
-ADDED from C:\mayank project\SalForceApp\knife\src\main\AndroidManifest.xml:20:5-23:19
+ADDED from C:\Users\User.MDEVPC-40\Desktop\salesforce\SalForceApp\knife\src\main\AndroidManifest.xml:20:5-23:19
 	android:supportsRtl
-		ADDED from C:\mayank project\SalForceApp\knife\src\main\AndroidManifest.xml:22:18-44
+		ADDED from C:\Users\User.MDEVPC-40\Desktop\salesforce\SalForceApp\knife\src\main\AndroidManifest.xml:22:18-44
 	android:label
-		ADDED from C:\mayank project\SalForceApp\knife\src\main\AndroidManifest.xml:20:18-50
+		ADDED from C:\Users\User.MDEVPC-40\Desktop\salesforce\SalForceApp\knife\src\main\AndroidManifest.xml:20:18-50
 	android:allowBackup
-		ADDED from C:\mayank project\SalForceApp\knife\src\main\AndroidManifest.xml:21:18-44
+		ADDED from C:\Users\User.MDEVPC-40\Desktop\salesforce\SalForceApp\knife\src\main\AndroidManifest.xml:21:18-44
 uses-sdk
-INJECTED from C:\mayank project\SalForceApp\knife\src\main\AndroidManifest.xml reason: use-sdk injection requested
-INJECTED from C:\mayank project\SalForceApp\knife\src\main\AndroidManifest.xml
-INJECTED from C:\mayank project\SalForceApp\knife\src\main\AndroidManifest.xml
-INJECTED from C:\mayank project\SalForceApp\knife\src\main\AndroidManifest.xml
-INJECTED from C:\mayank project\SalForceApp\knife\src\main\AndroidManifest.xml
+INJECTED from C:\Users\User.MDEVPC-40\Desktop\salesforce\SalForceApp\knife\src\main\AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from C:\Users\User.MDEVPC-40\Desktop\salesforce\SalForceApp\knife\src\main\AndroidManifest.xml
+INJECTED from C:\Users\User.MDEVPC-40\Desktop\salesforce\SalForceApp\knife\src\main\AndroidManifest.xml
+INJECTED from C:\Users\User.MDEVPC-40\Desktop\salesforce\SalForceApp\knife\src\main\AndroidManifest.xml
+INJECTED from C:\Users\User.MDEVPC-40\Desktop\salesforce\SalForceApp\knife\src\main\AndroidManifest.xml
 	android:targetSdkVersion
-		INJECTED from C:\mayank project\SalForceApp\knife\src\main\AndroidManifest.xml
-		ADDED from C:\mayank project\SalForceApp\knife\src\main\AndroidManifest.xml
-		INJECTED from C:\mayank project\SalForceApp\knife\src\main\AndroidManifest.xml
+		INJECTED from C:\Users\User.MDEVPC-40\Desktop\salesforce\SalForceApp\knife\src\main\AndroidManifest.xml
+		ADDED from C:\Users\User.MDEVPC-40\Desktop\salesforce\SalForceApp\knife\src\main\AndroidManifest.xml
+		INJECTED from C:\Users\User.MDEVPC-40\Desktop\salesforce\SalForceApp\knife\src\main\AndroidManifest.xml
 	android:minSdkVersion
-		INJECTED from C:\mayank project\SalForceApp\knife\src\main\AndroidManifest.xml
-		ADDED from C:\mayank project\SalForceApp\knife\src\main\AndroidManifest.xml
-		INJECTED from C:\mayank project\SalForceApp\knife\src\main\AndroidManifest.xml
+		INJECTED from C:\Users\User.MDEVPC-40\Desktop\salesforce\SalForceApp\knife\src\main\AndroidManifest.xml
+		ADDED from C:\Users\User.MDEVPC-40\Desktop\salesforce\SalForceApp\knife\src\main\AndroidManifest.xml
+		INJECTED from C:\Users\User.MDEVPC-40\Desktop\salesforce\SalForceApp\knife\src\main\AndroidManifest.xml
