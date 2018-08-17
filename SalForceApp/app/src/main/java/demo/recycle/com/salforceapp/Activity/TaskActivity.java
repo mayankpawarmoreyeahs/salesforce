@@ -318,6 +318,12 @@ public class TaskActivity extends AppCompatActivity {
 
                                 break;
 
+
+
+                            case R.id.get_business:
+                                startActivity(new Intent(TaskActivity.this, Bussinesscard.class));
+                                break;
+
                             case R.id.logout:
 
                                 mDrawerLayout.closeDrawers();

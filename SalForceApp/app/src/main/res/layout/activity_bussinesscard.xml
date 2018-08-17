@@ -6,4 +6,12 @@
     android:layout_height="match_parent"
     tools:context="demo.recycle.com.salforceapp.Activity.Bussinesscard">
 
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textSize="30dp"
+
+        tools:layout_editor_absoluteX="87dp"
+        tools:layout_editor_absoluteY="58dp" />
 </android.support.constraint.ConstraintLayout>
