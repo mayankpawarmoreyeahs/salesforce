@@ -69,20 +69,19 @@
             android:name=".Activity.TaskList"
             android:label="@string/app_name"
             android:saveEnabled="false"
-            android:theme="@style/AppTheme.NoActionBar"  />
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Activity.ShowTaskDetailActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".Activity.DraftList"
+        <activity
+            android:name=".Activity.DraftList"
             android:label="@string/app_name"
             android:saveEnabled="false"
-            android:theme="@style/AppTheme.NoActionBar"    />
-
-
-
-
-        <activity android:name=".Activity.CreateTaskActivity"
-            android:theme="@style/AppTheme.NoActionBar"  ></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Activity.CreateTaskActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".Activity.Bussinesscard"></activity>
     </application>
 
 </manifest>
