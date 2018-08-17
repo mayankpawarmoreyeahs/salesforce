@@ -466,13 +466,15 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
+                            android:layout_marginTop="10dp"
                             android:weightSum="1"
+                            android:visibility="gone"
                             android:id="@+id/attachmentlayout"
                             >
 
                             <ImageView
-                                android:layout_width="100dp"
-                                android:layout_height="100dp"
+                                android:layout_width="50dp"
+                                android:layout_height="50dp"
                                 android:id="@+id/imageicon"/>
 
 
@@ -487,23 +489,42 @@
                                 android:layout_marginTop="8dp"
                                 android:layout_marginLeft="10dp"/>
 
-                            <Button
-                                android:id="@+id/download"
-                                android:layout_width="100dp"
-                                android:layout_height="35dp"
-                                android:layout_gravity="center"
-                                android:layout_marginBottom="10dp"
-                                android:layout_marginLeft="10dp"
-                                android:layout_marginRight="10dp"
-                                android:layout_marginTop="20dp"
-                                android:visibility="gone"
-
-                                android:background="@drawable/buttonshape"
-                                android:text="Download"
-                                android:textColor="#ffffff" />
 
 
                         </LinearLayout>
+
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginTop="10dp"
+                            android:weightSum="1"
+                            android:visibility="gone"
+                            android:id="@+id/attachmentlayout1"
+                            >
+
+                            <ImageView
+                                android:layout_width="50dp"
+                                android:layout_height="50dp"
+                                android:id="@+id/imageicon1"/>
+
+
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/nameofattachment1"
+                                android:layout_weight="1"
+                                android:textSize="20sp"
+                                android:layout_gravity="center"
+                                android:layout_marginTop="8dp"
+                                android:layout_marginLeft="10dp"/>
+
+
+
+                        </LinearLayout>
+
 
 
 

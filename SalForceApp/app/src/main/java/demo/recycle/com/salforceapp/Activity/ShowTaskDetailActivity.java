@@ -43,14 +43,18 @@ import com.google.android.gms.vision.text.TextBlock;
 import com.google.android.gms.vision.text.TextRecognizer;
 
 
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -83,7 +87,7 @@ public class ShowTaskDetailActivity extends AppCompatActivity {
     private static final int STORAGE_PERMISSION_CODE = 1;
     private static final int REQ_CODE_SPEECH_INPUT = 100;
     TextView event_date;
-    TextView search_contact, search_account,nameofattachment;
+    TextView search_contact, search_account,nameofattachment,nameofattachment1;
     RadioButton radiocontact, radioaccount;
     EditText task_subject;
     KnifeText knife;
@@ -93,8 +97,8 @@ public class ShowTaskDetailActivity extends AppCompatActivity {
     Button edit, delete,download;
     ImageButton cameraButton, voiceButton, boldButton, italicButton, underlineButton;
     String discription;
-    ImageView calenderIcon,imageicon;
-    LinearLayout attachmentlayout;
+    ImageView calenderIcon,imageicon,imageicon1;
+    LinearLayout attachmentlayout,attachmentlayout1;
 
 
 
@@ -138,9 +142,11 @@ public class ShowTaskDetailActivity extends AppCompatActivity {
         delete = (Button) findViewById(R.id.deletebutton);
         calenderIcon = (ImageView) findViewById(R.id.calender);
         attachmentlayout=(LinearLayout)findViewById(R.id.attachmentlayout);
-        download=(Button)findViewById(R.id.download);
+        attachmentlayout1=(LinearLayout)findViewById(R.id.attachmentlayout1);
         nameofattachment=(TextView)findViewById(R.id.nameofattachment);
         imageicon=(ImageView) findViewById(R.id.imageicon);
+        nameofattachment1=(TextView)findViewById(R.id.nameofattachment1);
+        imageicon1=(ImageView) findViewById(R.id.imageicon1);
         setupBold();
         setupItalic();
         setupUnderline();
@@ -756,7 +762,7 @@ public class ShowTaskDetailActivity extends AppCompatActivity {
             super.onPreExecute();
 
             pd.setTitle("Please Wait...");
-            pd.setMessage("Deleting task");
+            pd.setMessage("Showing task");
             pd.setCancelable(false);
 //            pd.show();
         }
@@ -776,7 +782,7 @@ public class ShowTaskDetailActivity extends AppCompatActivity {
 
             myUrl = InstanceUrl + "/services/data/v24.0/query?q=SELECT%20id%2C%20%28Select%20id%2Cname%20from%20Attachments%29%20FROM%20task%20WHERE%20id=%20%27"+id+"%27";
 
-            Log.d("mayank","mayank" + myUrl);
+
 
 
             try {
@@ -848,30 +854,38 @@ public class ShowTaskDetailActivity extends AppCompatActivity {
                      else
                         {
                             String name="";
-                            attachmentlayout.setVisibility(View.VISIBLE);
+
 
 
                             JSONArray jsonAr = attachment.getJSONArray("records");
                             for (int j = 0; j < jsonAr.length(); j++) {
 
-                                JSONObject record = jsonAr.getJSONObject(i);
+                                JSONObject record = jsonAr.getJSONObject(j);
                                 JSONObject attribute = record.getJSONObject("attributes");
 
-                               name  = "      "+name+record.getString("Name")+"\r\n";
+                               name  = record.getString("Name")+"\r\n";
                                 String url = attribute.getString("url");
                              //   new ShowTaskDetailActivity.AsyncTaskFetchAttachmentBodyFromUrl().execute(url);
+                                Log.d("TAG", ""+j+name);
 
-                               new ShowTaskDetailActivity.AsyncTaskFetchAttachmentBodyFromUrl().execute(url);
-                                download.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
+                                if(j==0) {
 
-                                    }
-                                });
+                                    nameofattachment.setText(" " + name);
+                                    Log.d("TAG0", ""+j+name);
+                                    new ShowTaskDetailActivity.AsyncTaskFetchAttachmentBodyFromUrl().execute(url);
+                                }
+
+                                if(j==1)
+                                {
+
+                                    nameofattachment1.setText(" " + name);
+                                    Log.d("TAG0", ""+j+name);
+                                    new ShowTaskDetailActivity.AsyncTaskFetchAttachmentBodyFromUrlExtra().execute(url);
+                                }
 
 
                             }
-                            nameofattachment.setText("Name Of Images   "+name);
+
                         }
                     }
 
@@ -886,24 +900,26 @@ public class ShowTaskDetailActivity extends AppCompatActivity {
     }
 
 
-    private class AsyncTaskFetchAttachmentBodyFromUrl extends AsyncTask<String, Void, String> {
+    private class AsyncTaskFetchAttachmentBodyFromUrl extends AsyncTask<String, Void, Bitmap> {
 
         ProgressDialog pd = new ProgressDialog(ShowTaskDetailActivity.this);
+
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
 
             pd.setTitle("Please Wait...");
-            pd.setMessage("Deleting task");
+            pd.setMessage("Showing Task");
             pd.setCancelable(false);
-//            pd.show();
+            pd.show();
         }
 
         @Override
-        protected String doInBackground(String... params) {
+        protected Bitmap doInBackground(String... params) {
 
             String URL = params[0];
+
 
             String InstanceUrl = PreferenceManager.getDefaultSharedPreferences(ShowTaskDetailActivity.this).getString("InstanceUrl", "");
             String AccessToken = PreferenceManager.getDefaultSharedPreferences(ShowTaskDetailActivity.this).getString("AccessToken", "");
@@ -915,74 +931,162 @@ public class ShowTaskDetailActivity extends AppCompatActivity {
 
             myUrl ="https://na1.salesforce.com"+URL+"/Body/";
             Log.d("TAG", "doInBackground:" + myUrl);
-
+            Bitmap b = null;
 
             try {
-                String SetServerString = "";
+                 b=   downloadBitmap(myUrl);
 
-                // Create Request to server and get response
-
-                HttpGet httpGET = new HttpGet(myUrl);
-
-                httpGET.addHeader("Authorization", "Bearer " + AccessToken);
-
-                ResponseHandler<String> responseHandler = new BasicResponseHandler();
-
-                 SetServerString = Client.execute(httpGET, responseHandler);
-                Log.d("MAYANK", "doInBackground: "+SetServerString);
-                return SetServerString;
-
-                // Show response on activity
-
-
-            } catch (Exception ex) {
-
-
-                Log.d("mayank", "on "+ex.toString());
-                return "Exception";
-            }
-
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-            Charset iso8859_15 = Charset.forName("ISO-8859-15");
-
-            Log.d("mayank", "onPostExecute: "+new String(s.getBytes(),iso8859_15));
-
-
-      //      byte[] decodedString = Base64.decode(String.valueOf(s), Base64.DEFAULT);
-
-
-
-       //     Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-     //           imageicon.setImageBitmap(decodedByte);
-
-
-
-
-
-        /*    File file = new File("d");
-            OutputStream outputStream;
-                     try {
-                         outputStream  = new FileOutputStream(file);
-                         IOUtils.copy(inputStream, outputStream);
-                         outputStream.close();
-            }
-
-            catch (FileNotFoundException e)
-            {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
 
-            catch (IOException e)
-            {
-                         e.printStackTrace();
 
-                     }
 
-*/
+        return b;
+
+        }
+
+
+        private Bitmap downloadBitmap(String url) throws IOException {
+
+            String InstanceUrl = PreferenceManager.getDefaultSharedPreferences(ShowTaskDetailActivity.this).getString("InstanceUrl", "");
+            String AccessToken = PreferenceManager.getDefaultSharedPreferences(ShowTaskDetailActivity.this).getString("AccessToken", "");
+            HttpUriRequest request = new HttpGet(url.toString());
+            request.addHeader("Authorization", "Bearer " + AccessToken);
+            HttpClient httpClient = new DefaultHttpClient();
+            HttpResponse response = httpClient.execute(request);
+
+            StatusLine statusLine = response.getStatusLine();
+            int statusCode = statusLine.getStatusCode();
+            if (statusCode == 200) {
+                HttpEntity entity = response.getEntity();
+                byte[] bytes = EntityUtils.toByteArray(entity);
+
+                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0,
+                        bytes.length);
+                return bitmap;
+            } else {
+                throw new IOException("Download failed, HTTP response code "
+                        + statusCode + " - " + statusLine.getReasonPhrase());
+            }
+        }
+
+
+
+        @Override
+        protected void onPostExecute(Bitmap s) {
+            super.onPostExecute(s);
+
+            pd.dismiss();
+
+
+                attachmentlayout.setVisibility(View.VISIBLE);
+
+                imageicon.setImageBitmap(s);
+
+
+
+
+
+
+
+
+        }
+
+    }
+
+
+    private class AsyncTaskFetchAttachmentBodyFromUrlExtra extends AsyncTask<String, Void, Bitmap> {
+
+        ProgressDialog pd = new ProgressDialog(ShowTaskDetailActivity.this);
+
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            pd.setTitle("Please Wait...");
+            pd.setMessage("Showing Task");
+            pd.setCancelable(false);
+            pd.show();
+        }
+
+        @Override
+        protected Bitmap doInBackground(String... params) {
+
+            String URL = params[0];
+
+
+            String InstanceUrl = PreferenceManager.getDefaultSharedPreferences(ShowTaskDetailActivity.this).getString("InstanceUrl", "");
+            String AccessToken = PreferenceManager.getDefaultSharedPreferences(ShowTaskDetailActivity.this).getString("AccessToken", "");
+            String AccountId = Accountid;
+            // Create http cliient object to send request to server
+            String myUrl = "";
+            HttpClient Client = new DefaultHttpClient();
+
+
+            myUrl ="https://na1.salesforce.com"+URL+"/Body/";
+            Log.d("TAG", "doInBackground:" + myUrl);
+            Bitmap b = null;
+
+            try {
+                b=   downloadBitmap(myUrl);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
+
+            return b;
+
+        }
+
+
+        private Bitmap downloadBitmap(String url) throws IOException {
+
+            String InstanceUrl = PreferenceManager.getDefaultSharedPreferences(ShowTaskDetailActivity.this).getString("InstanceUrl", "");
+            String AccessToken = PreferenceManager.getDefaultSharedPreferences(ShowTaskDetailActivity.this).getString("AccessToken", "");
+            HttpUriRequest request = new HttpGet(url.toString());
+            request.addHeader("Authorization", "Bearer " + AccessToken);
+            HttpClient httpClient = new DefaultHttpClient();
+            HttpResponse response = httpClient.execute(request);
+
+            StatusLine statusLine = response.getStatusLine();
+            int statusCode = statusLine.getStatusCode();
+            if (statusCode == 200) {
+                HttpEntity entity = response.getEntity();
+                byte[] bytes = EntityUtils.toByteArray(entity);
+
+                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0,
+                        bytes.length);
+                return bitmap;
+            } else {
+                throw new IOException("Download failed, HTTP response code "
+                        + statusCode + " - " + statusLine.getReasonPhrase());
+            }
+        }
+
+
+
+        @Override
+        protected void onPostExecute(Bitmap s) {
+            super.onPostExecute(s);
+
+            pd.dismiss();
+
+
+
+
+                attachmentlayout1.setVisibility(View.VISIBLE);
+
+                imageicon1.setImageBitmap(s);
+
+
+
+
+
+
 
         }
 

@@ -315,7 +315,7 @@ public class TaskActivity extends AppCompatActivity {
                                 }
 
                                 startActivity(new Intent(TaskActivity.this, DraftList.class));
-                                finish();
+
                                 break;
 
                             case R.id.logout:
@@ -2770,13 +2770,10 @@ public class TaskActivity extends AppCompatActivity {
                     final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
 
 
-                    InputStream inputStream = getContentResolver().openInputStream(contentURI);
-                    Drawable yourDrawable = Drawable.createFromStream(inputStream, contentURI.toString());
-                    Bitmap icon1 = ((BitmapDrawable) yourDrawable).getBitmap();
-                    getResizedBitmap(icon1, 100);
 
 
-                    String encodedImage = encodeImage(getResizedBitmap(icon1, 100));
+
+                    String encodedImage = encodeImage(selectedImage);
 
 
                     //  encodedfile = new String(Base64.encodeBase64(bytes), "UTF-8");
@@ -3214,7 +3211,7 @@ public class TaskActivity extends AppCompatActivity {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         Charset iso8859_15 = Charset.forName("ISO-8859-15");
 
-        bm.compress(Bitmap.CompressFormat.PNG, 30, baos);
+        bm.compress(Bitmap.CompressFormat.JPEG, 100, baos);
 
         byte[] b = baos.toByteArray();
         byte[] encodedBytes = Base64.encodeBase64(b);
@@ -3223,7 +3220,7 @@ public class TaskActivity extends AppCompatActivity {
             System.out.println("encodedBytes " + new String(encodedBytes,iso8859_15));
 
         //   String encImage = Base64.encode(b, Base64.DEFAULT);
-      //  Base64.encodeBase64("Test".getBytes());
+     //   Base64.encodeBase64("Test".getBytes());
 
         return new String(encodedBytes,iso8859_15);
     }
