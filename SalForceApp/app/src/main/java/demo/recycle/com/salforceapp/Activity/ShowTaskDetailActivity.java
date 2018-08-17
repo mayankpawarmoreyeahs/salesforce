@@ -22,7 +22,8 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Base64;
+import org.apache.commons.codec.binary.Base64;
+
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
@@ -62,6 +63,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
+import java.sql.Blob;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
@@ -652,7 +655,7 @@ public class ShowTaskDetailActivity extends AppCompatActivity {
             super.onPreExecute();
 
             pd.setTitle("Please Wait...");
-            pd.setMessage("Deleting task");
+            pd.setMessage("Updating task");
             pd.setCancelable(false);
             pd.show();
         }
@@ -854,10 +857,11 @@ public class ShowTaskDetailActivity extends AppCompatActivity {
                                 JSONObject record = jsonAr.getJSONObject(i);
                                 JSONObject attribute = record.getJSONObject("attributes");
 
-                               name  = name+record.getString("Name")+"\r\n";
+                               name  = "      "+name+record.getString("Name")+"\r\n";
                                 String url = attribute.getString("url");
+                             //   new ShowTaskDetailActivity.AsyncTaskFetchAttachmentBodyFromUrl().execute(url);
 
-                             //  new ShowTaskDetailActivity.AsyncTaskFetchAttachmentBodyFromUrl().execute(url);
+                               new ShowTaskDetailActivity.AsyncTaskFetchAttachmentBodyFromUrl().execute(url);
                                 download.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
@@ -867,7 +871,7 @@ public class ShowTaskDetailActivity extends AppCompatActivity {
 
 
                             }
-                            nameofattachment.setText(name);
+                            nameofattachment.setText("Name Of Images   "+name);
                         }
                     }
 
@@ -923,7 +927,10 @@ public class ShowTaskDetailActivity extends AppCompatActivity {
                 httpGET.addHeader("Authorization", "Bearer " + AccessToken);
 
                 ResponseHandler<String> responseHandler = new BasicResponseHandler();
-                return SetServerString = Client.execute(httpGET, responseHandler);
+
+                 SetServerString = Client.execute(httpGET, responseHandler);
+                Log.d("MAYANK", "doInBackground: "+SetServerString);
+                return SetServerString;
 
                 // Show response on activity
 
@@ -940,16 +947,17 @@ public class ShowTaskDetailActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
+            Charset iso8859_15 = Charset.forName("ISO-8859-15");
+
+            Log.d("mayank", "onPostExecute: "+new String(s.getBytes(),iso8859_15));
+
+
+      //      byte[] decodedString = Base64.decode(String.valueOf(s), Base64.DEFAULT);
 
 
 
-
-            byte[] decodedString = Base64.decode(s, Base64.DEFAULT);
-
-
-
-            Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-                imageicon.setImageBitmap(decodedByte);
+       //     Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+     //           imageicon.setImageBitmap(decodedByte);
 
 
 

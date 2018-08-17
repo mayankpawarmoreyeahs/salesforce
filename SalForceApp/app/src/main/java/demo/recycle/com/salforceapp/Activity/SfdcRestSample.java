@@ -40,7 +40,7 @@ public class SfdcRestSample extends AppCompatActivity {
         String consumerKey = this.getResources().getString(R.string.consumerKey).toString();
         String url = this.getResources().getString(R.string.oAuthUrl).toString();
         callbackUrl = this.getResources().getString(R.string.callbackUrl).toString();
-        String reqUrl = url + "/services/oauth2/authorize?response_type=token&display=touch&client_id=" + consumerKey + "&redirect_uri=" + callbackUrl;
+        String reqUrl = url + "/services/oauth2/authorize?response_type=token&display=touch&client_id=" + consumerKey + "&redirect_uri=" + callbackUrl+"&prompt=login";
 
         Log.d("mayank", "" + reqUrl);
 

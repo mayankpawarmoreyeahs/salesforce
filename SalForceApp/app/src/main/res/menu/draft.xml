@@ -20,16 +20,16 @@
     <item
         android:id="@+id/get_Draft"
         android:orderInCategory="100"
-        android:title="Get Draft"
+        android:title="Create Task"
         app:showAsAction="never" />
 
 
 
-       <item
+    <!--   <item
            android:id="@+id/logout"
            android:orderInCategory="100"
            android:title="Logout"
-           app:showAsAction="never" />
+           app:showAsAction="never" />     -->
 
 
-   </menu>
+</menu>

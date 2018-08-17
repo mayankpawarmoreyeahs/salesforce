@@ -44,7 +44,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Base64;
+
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -84,6 +84,7 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.ResponseHandler;
@@ -108,6 +109,8 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.Charset;
+import java.sql.Blob;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -160,7 +163,7 @@ public class TaskActivity extends AppCompatActivity {
     private static final int STORAGE_PERMISSION_CODE = 1;
     private static final int REQ_CODE_SPEECH_INPUT = 100;
     public final int REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS = 1;
-    String[] ImageInString=new String[2] ;
+    String[] ImageInString = new String[2];
 
     Button btnSave;
     String AccountId, ContactId;
@@ -195,7 +198,7 @@ public class TaskActivity extends AppCompatActivity {
     Utils utils;
     String flagButtonClick;
     String formattedDate;
-    ProgressDialog pDialog;
+    ProgressDialog pDialog, pDialog1,pDialog2;
     private Spinner spSelectContact, spSelectAccount;
     ArrayAdapter arrayAdapterContact, arrayAdapterAccount;
     ArrayList arrayListContact, arrayListAccount;
@@ -213,14 +216,14 @@ public class TaskActivity extends AppCompatActivity {
     private static final String SAVED_INSTANCE_RESULT = "result";
     TextToSpeech t1;
     Dialog customDialog;
-    ImageView thubnail,thubnail1;
-    LinearLayout imagelayout,imagelayout1;
+    ImageView thubnail, thubnail1;
+    LinearLayout imagelayout, imagelayout1;
     ProgressDialog progress;
-    TextView imagename,imagename1;
+    TextView imagename, imagename1;
     private DrawerLayout mDrawerLayout;
     ExpandableListView slidemenus;
     String sucessid;
-    String nameOfimage[]=new String[2];
+    String nameOfimage[] = new String[2];
     boolean FlagForAttachment = false;
     DatabaseHelper DB;
     List<String> listDataHeader;
@@ -228,11 +231,11 @@ public class TaskActivity extends AppCompatActivity {
     HashMap<String, List<String>> listDataChild;
     String Type = new String();
     String Id;
-    TextView  nameofuser;
-    ImageView  IMAGEofuser;
+    TextView nameofuser;
+    ImageView IMAGEofuser;
     int numberofimage;
 
-    ImageView cross,cross1;
+    ImageView cross, cross1;
 
 
     @Override
@@ -264,11 +267,10 @@ public class TaskActivity extends AppCompatActivity {
 
         NavigationView navigationView = findViewById(R.id.navigation);
         View headerView = navigationView.inflateHeaderView(R.layout.nav_header_main);
-        nameofuser=(TextView) headerView.findViewById(R.id.name_of_user);
-        IMAGEofuser=(ImageView)headerView.findViewById(R.id.imageViewofuser);
 
 
-
+        nameofuser = (TextView) headerView.findViewById(R.id.name_of_user);
+        IMAGEofuser = (ImageView) headerView.findViewById(R.id.imageViewofuser);
 
 
         navigationView.setNavigationItemSelectedListener(
@@ -281,49 +283,70 @@ public class TaskActivity extends AppCompatActivity {
 
                             case R.id.get_Task:
                                 mDrawerLayout.closeDrawers();
-                                TaskActivity.this.startActivity(new Intent(TaskActivity.this, TaskList.class));
+                                if (!EventSubject.getText().toString().matches("")) {
+                                    pDialog1 = new ProgressDialog(TaskActivity.this);
+                                    pDialog1.setMessage("DraftSaving...");
+                                    pDialog1.setIndeterminate(false);
+                                    pDialog1.setCancelable(true);
+                                    pDialog1.show();
+                                    DB.insertDraft(AccountId, UserId, knife.getText().toString(), "Not Started", sdate, "Normal", EventSubject.getText().toString(), ContactId);
+                                    pDialog1.dismiss();
+
+                                }
+
+                                startActivity(new Intent(TaskActivity.this, TaskList.class));
 
                                 break;
+
 
                             case R.id.get_Draft:
                                 mDrawerLayout.closeDrawers();
                                 UserId = PreferenceManager.getDefaultSharedPreferences(TaskActivity.this).getString("UserId", "");
 
-                                if (!EventSubject.getText().toString().matches(""))
+                                if (!EventSubject.getText().toString().matches("")) {
+                                    pDialog2 = new ProgressDialog(TaskActivity.this);
+                                    pDialog2.setMessage("DraftSaving...");
+                                    pDialog2.setIndeterminate(false);
+                                    pDialog2.setCancelable(true);
+                                    pDialog2.show();
                                     DB.insertDraft(AccountId, UserId, knife.getText().toString(), "Not Started", sdate, "Normal", EventSubject.getText().toString(), ContactId);
+                                    pDialog2.dismiss();
+
+                                }
+
                                 startActivity(new Intent(TaskActivity.this, DraftList.class));
                                 finish();
                                 break;
 
-                            //   case R.id.logout:
+                            case R.id.logout:
 
-                            //      mDrawerLayout.closeDrawers();
-                            // startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://login.salesforce.com/services/oauth2/callback")));
-                            //  startActivity(new Intent(this,EventList.class));
-                            //System.out.println("Run");
-
-
-                            //     PreferenceManager.getDefaultSharedPreferences(TaskActivity.this).edit().clear().commit();
-                            //       PreferenceManager.getDefaultSharedPreferences(TaskActivity.this).edit().putString("LOGOUT","1").commit();
-                            //
+                                mDrawerLayout.closeDrawers();
+                                // startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://login.salesforce.com/services/oauth2/callback")));
+                                //  startActivity(new Intent(this,EventList.class));
+                                //System.out.println("Run");
 
 
-                            //    clearApplicationData();
-                            //  finish();
-                            //     new  TaskActivity.AsyncTaskLogout().execute();
-                            //    android.os.Process.killProcess(android.os.Process.myPid());
-                            //    System.exit(1);
-
-                            //  Intent intent = new Intent(TaskActivity.this, LoginActivity.class);
-                            //   intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK); //this will always start your activity as a new task
-                            //  startActivity(intent);
+                                //     PreferenceManager.getDefaultSharedPreferences(TaskActivity.this).edit().clear().commit();
+                                //       PreferenceManager.getDefaultSharedPreferences(TaskActivity.this).edit().putString("LOGOUT","1").commit();
+                                //
 
 
-                            //  Intent intent = new Intent(TaskActivity.this, SfdcRestSample.class);
-                            //  startActivity(intent);
+                                //    clearApplicationData();
+                                //  finish();
+                                new TaskActivity.AsyncTaskLogout().execute();
+                                //  android.os.Process.killProcess(android.os.Process.myPid());
+                                //   System.exit(1);
+
+                                //  Intent intent = new Intent(TaskActivity.this, LoginActivity.class);
+                                //   intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK); //this will always start your activity as a new task
+                                //  startActivity(intent);
+                                new TaskActivity.AsyncTaskSession().execute();
+
+                                //  Intent intent = new Intent(TaskActivity.this, TaskActivity.class);
+                                //  startActivity(intent);
 
 
-                            //     break;
+                                //     break;
                             default:
                                 break;
 
@@ -352,7 +375,7 @@ public class TaskActivity extends AppCompatActivity {
         SearchContact = (TextView) findViewById(R.id.SearchContact);
         customDialog = new Dialog(this, R.style.CustomDialog);
         imagename = (TextView) findViewById(R.id.image_name);
-        imagename1=(TextView)findViewById(R.id.image_name1);
+        imagename1 = (TextView) findViewById(R.id.image_name1);
         ContactName = PreferenceManager.getDefaultSharedPreferences(TaskActivity.this).getString("ContactName", "");
 
         SearchAccount.setText(AccountName);
@@ -362,11 +385,11 @@ public class TaskActivity extends AppCompatActivity {
         EventDate = (TextView) findViewById(R.id.event_date);
         knife = (KnifeText) findViewById(R.id.knife);
         thubnail = (ImageView) findViewById(R.id.thubnail);
-        thubnail1=(ImageView)findViewById(R.id.thubnail1);
+        thubnail1 = (ImageView) findViewById(R.id.thubnail1);
         imagelayout = (LinearLayout) findViewById(R.id.imagelayout);
-        imagelayout1=(LinearLayout)findViewById(R.id.imagelayout1);
-        cross=findViewById(R.id.cross);
-        cross1=findViewById(R.id.cross1);
+        imagelayout1 = (LinearLayout) findViewById(R.id.imagelayout1);
+        cross = findViewById(R.id.cross);
+        cross1 = findViewById(R.id.cross1);
 
 
         cross.setOnClickListener(new View.OnClickListener() {
@@ -374,21 +397,18 @@ public class TaskActivity extends AppCompatActivity {
             public void onClick(View v) {
 
 
+                if (numberofimage == 2) {
 
-                if(numberofimage==2) {
-
-                    ImageInString[0]=ImageInString[1];
-                    ImageInString[0]=ImageInString[1];
+                    ImageInString[0] = ImageInString[1];
+                    ImageInString[0] = ImageInString[1];
                     ImageInString[1] = "";
                     nameOfimage[1] = "";
                     numberofimage = 1;
 
-                }
+                } else if (numberofimage == 1) {
 
-              else  if(numberofimage==1) {
-
-                    ImageInString[0]="";
-                    ImageInString[0]="";
+                    ImageInString[0] = "";
+                    ImageInString[0] = "";
                     ImageInString[1] = "";
                     nameOfimage[1] = "";
                     numberofimage = 0;
@@ -396,7 +416,7 @@ public class TaskActivity extends AppCompatActivity {
                 }
 
 
-                 imagename.setText("");
+                imagename.setText("");
                 imagelayout.setVisibility(View.GONE);
 
             }
@@ -406,19 +426,15 @@ public class TaskActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if(numberofimage==2) {
+                if (numberofimage == 2) {
 
                     ImageInString[1] = "";
                     nameOfimage[1] = "";
                     numberofimage = 1;
-                }
+                } else if (numberofimage == 1) {
 
-
-               else if(numberofimage==1)
-                {
-
-                    ImageInString[0]="";
-                    ImageInString[0]="";
+                    ImageInString[0] = "";
+                    ImageInString[0] = "";
                     ImageInString[1] = "";
                     nameOfimage[1] = "";
                     numberofimage = 0;
@@ -426,19 +442,15 @@ public class TaskActivity extends AppCompatActivity {
                 }
 
 
-                 imagename1.setText("");
+                imagename1.setText("");
                 imagelayout1.setVisibility(View.GONE);
 
 
-                Log.d("mayank3", "onClick:"+ImageInString[0]);
-
+                Log.d("mayank3", "onClick:" + ImageInString[0]);
 
 
             }
         });
-
-
-
 
 
         Calendar c = Calendar.getInstance();
@@ -733,17 +745,17 @@ public class TaskActivity extends AppCompatActivity {
                 }
                  */
 
-                        if (utils.isNetworkAvailable()) {
+                    if (utils.isNetworkAvailable()) {
 
 
-                            Intent intent = new Intent(TaskActivity.this, LocationService.class);
-                            startService(intent);
-                            // if (flag.equalsIgnoreCase("1")) {
+                        Intent intent = new Intent(TaskActivity.this, LocationService.class);
+                        startService(intent);
+                        // if (flag.equalsIgnoreCase("1")) {
 
-                            if (sdate.equalsIgnoreCase("")) {
-                                utils.setToast(TaskActivity.this, "Please select date");
+                        if (sdate.equalsIgnoreCase("")) {
+                            utils.setToast(TaskActivity.this, "Please select date");
 
-                            } else {
+                        } else {
                                /* flagButtonClick = "2";
                                 progress.setTitle("LOADING");
                                 progress.setMessage("Wait while loading...");
@@ -755,49 +767,41 @@ public class TaskActivity extends AppCompatActivity {
 
                                 */
 
-                                Intent intentforbutton = new Intent(TaskActivity.this, CreateTaskActivity.class);
-                                intentforbutton.putExtra("Activedate", EventDate.getText().toString());
-                                intentforbutton.putExtra("name", EventSubject.getText().toString());
-                                intentforbutton.putExtra("description", knife.getText().toString());
-                                intentforbutton.putExtra("type",Type);
-                                intentforbutton.putExtra("FlagForAttachment",FlagForAttachment);
-                                intentforbutton.putExtra("numberofimage",numberofimage);
-                                if (Type != null) {
-                                    if (Type.equalsIgnoreCase("draft")) {
+                            Intent intentforbutton = new Intent(TaskActivity.this, CreateTaskActivity.class);
+                            intentforbutton.putExtra("Activedate", EventDate.getText().toString());
+                            intentforbutton.putExtra("name", EventSubject.getText().toString());
+                            intentforbutton.putExtra("description", knife.getText().toString());
+                            intentforbutton.putExtra("type", Type);
+                            intentforbutton.putExtra("FlagForAttachment", FlagForAttachment);
+                            intentforbutton.putExtra("numberofimage", numberofimage);
+                            if (Type != null) {
+                                if (Type.equalsIgnoreCase("draft")) {
 
-                                        intentforbutton.putExtra("id",Id);
-                                    }
+                                    intentforbutton.putExtra("id", Id);
                                 }
+                            }
 
 
+                            if (FlagForAttachment) {
 
-
-                                if(FlagForAttachment)
-                                {
-
-                                    if(numberofimage==1) {
-                                        intentforbutton.putExtra("nameofimage", nameOfimage[0]);
-                                        intentforbutton.putExtra("body", ImageInString[0]);
-
-                                    }
-
-
-                                    if(numberofimage==2)
-                                    {
-                                        intentforbutton.putExtra("nameofimage", nameOfimage[0]);
-                                        intentforbutton.putExtra("body", ImageInString[0]);
-                                        intentforbutton.putExtra("nameofimage1", nameOfimage[1]);
-                                        intentforbutton.putExtra("body1", ImageInString[1]);
-                                    }
+                                if (numberofimage == 1) {
+                                    intentforbutton.putExtra("nameofimage", nameOfimage[0]);
+                                    intentforbutton.putExtra("body", ImageInString[0]);
 
                                 }
 
 
+                                if (numberofimage == 2) {
+                                    intentforbutton.putExtra("nameofimage", nameOfimage[0]);
+                                    intentforbutton.putExtra("body", ImageInString[0]);
+                                    intentforbutton.putExtra("nameofimage1", nameOfimage[1]);
+                                    intentforbutton.putExtra("body1", ImageInString[1]);
+                                }
+
+                            }
 
 
-
-
-                                startActivity(intentforbutton);
+                            startActivity(intentforbutton);
 
 
 
@@ -814,53 +818,52 @@ public class TaskActivity extends AppCompatActivity {
                                 }
 
                               */
-                            }
-
-
                         }
-                        //else
-                        //     {
-                        //    if(!APIFlack)
-                        //     {
-                        //         new HttpAsyncTaskNote().execute();
-                        //    }
-                        //     else
-                        //     {
-                        //         new HttpAsyncTaskAttachment().execute();
+
+
+                    }
+                    //else
+                    //     {
+                    //    if(!APIFlack)
+                    //     {
+                    //         new HttpAsyncTaskNote().execute();
+                    //    }
+                    //     else
+                    //     {
+                    //         new HttpAsyncTaskAttachment().execute();
 //
-                        //   }
-                        //  }
+                    //   }
+                    //  }
 
-                        else {
-                            utils.setToast(TaskActivity.this, "Please Connect to Internet. Saved as Draft ");
-                            SharedPreferences shared = PreferenceManager.getDefaultSharedPreferences(TaskActivity.this);
-                            String userid = shared.getString("UserId", "");
-
-
-                            DB.insertDraft(AccountId, userid, knife.getText().toString(), "Not Started", sdate, "Normal", EventSubject.getText().toString(), ContactId);
-                            flagButtonClick = "1";
-                            autoCompleteContact.setText("");
-                            autoCompleteAcount.setText("");
-                            knife.setText("");
-                            EventSubject.setText("");
-                            EventDate.setText("");
-                            numberofimage=0;
-                            imagelayout.setVisibility(View.GONE);
-                            imagelayout1.setVisibility(View.GONE);
-
-                            thubnail.setBackground(null);
-                            thubnail1.setBackground(null);
-                            imagename.setText("");
-                            imagename1.setText("");
+                    else {
+                        utils.setToast(TaskActivity.this, "Please Connect to Internet. Saved as Draft ");
+                        SharedPreferences shared = PreferenceManager.getDefaultSharedPreferences(TaskActivity.this);
+                        String userid = shared.getString("UserId", "");
 
 
+                        DB.insertDraft(AccountId, userid, knife.getText().toString(), "Not Started", sdate, "Normal", EventSubject.getText().toString(), ContactId);
+                        flagButtonClick = "1";
+                        autoCompleteContact.setText("");
+                        autoCompleteAcount.setText("");
+                        knife.setText("");
+                        EventSubject.setText("");
+                        EventDate.setText("");
+                        numberofimage = 0;
+                        imagelayout.setVisibility(View.GONE);
+                        imagelayout1.setVisibility(View.GONE);
 
-                            arrayListContact.clear();
-                            arrayListAccount.clear();
-                            myLayout.requestFocus();
-                            progress.dismiss();
+                        thubnail.setBackground(null);
+                        thubnail1.setBackground(null);
+                        imagename.setText("");
+                        imagename1.setText("");
 
-                        }
+
+                        arrayListContact.clear();
+                        arrayListAccount.clear();
+                        myLayout.requestFocus();
+                        progress.dismiss();
+
+                    }
 
                 }
             }
@@ -1100,7 +1103,6 @@ public class TaskActivity extends AppCompatActivity {
         DB = DatabaseHelper.getInstance(this);
 
 
-
         draftlist = DB.getAllDraft();
 
 
@@ -1182,7 +1184,7 @@ public class TaskActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
-            String base64 = Base64.encodeToString(data, Base64.NO_WRAP);
+
             DefaultHttpClient client = new DefaultHttpClient();
             try {
 
@@ -1246,7 +1248,6 @@ public class TaskActivity extends AppCompatActivity {
 
         }
     }
-
 
 
     private class HttpAsyncTaskAttachment extends AsyncTask<String, Void, String> {
@@ -2128,15 +2129,15 @@ public class TaskActivity extends AppCompatActivity {
 
     private class AsyncTaskLogout extends AsyncTask<String, Void, String> {
 
-        //  ProgressDialog pd = new ProgressDialog(TaskActivity.this);
+        ProgressDialog pd = new ProgressDialog(TaskActivity.this);
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            //  pd.setTitle("Please Wait...");
-            //  pd.setMessage("LOGOUT");
-            //  pd.setCancelable(false);
-            //  pd.show();
+            pd.setTitle("Please Wait...");
+            pd.setMessage("LOGOUT");
+            pd.setCancelable(false);
+            pd.show();
         }
 
         @Override
@@ -2181,7 +2182,7 @@ public class TaskActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String s) {
-//            pd.dismiss();
+            pd.dismiss();
             super.onPostExecute(s);
 
         }
@@ -2497,9 +2498,9 @@ public class TaskActivity extends AppCompatActivity {
         protected void onPreExecute() {
             super.onPreExecute();
             pd.setTitle("Please Wait...");
-            pd.setMessage("Account");
+            pd.setMessage("check session");
             pd.setCancelable(false);
-            //  pd.show();
+            pd.show();
         }
 
         @Override
@@ -2541,12 +2542,20 @@ public class TaskActivity extends AppCompatActivity {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             Log.d("mayankpawar", "" + s.toString());
-            //  pd.dismiss();
+            pd.dismiss();
             String message = "null";
             String ContactName = null, AccountName = null, WhatId, WhoId;
             if ((s.equalsIgnoreCase("Exception")) || (s.equalsIgnoreCase("UnsupportedEncodingException"))) {
                 SessionImageview.setImageResource(R.drawable.red_dot);
-                alertDialog();
+
+                PreferenceManager.getDefaultSharedPreferences(TaskActivity.this).edit().clear().commit();
+                //
+                //
+                // clearApplicationData();
+                android.os.Process.killProcess(android.os.Process.myPid());
+                System.exit(1);
+
+                //  alertDialog();
                 // utils.setToast(NoteActivity.this,"Error in Registrating,Please Try Later");
 
             } else {
@@ -2601,7 +2610,7 @@ public class TaskActivity extends AppCompatActivity {
                 PreferenceManager.getDefaultSharedPreferences(TaskActivity.this).edit().clear().commit();
                 //
                 //
-                clearApplicationData();
+                // clearApplicationData();
                 android.os.Process.killProcess(android.os.Process.myPid());
                 System.exit(1);
 
@@ -2774,15 +2783,15 @@ public class TaskActivity extends AppCompatActivity {
 
                     //   String encodedImage = encodeImage(selectedImage);
 
-                    if(numberofimage==2)
+                    if (numberofimage == 2)
 
                     {
-                        Toast.makeText(TaskActivity.this,"YOU CAN NOT ADD MORE THEN TWO FILE",Toast.LENGTH_LONG).show();
+                        Toast.makeText(TaskActivity.this, "YOU CAN NOT ADD MORE THEN TWO FILE", Toast.LENGTH_LONG).show();
 
                     }
 
 
-                    if(numberofimage==1)
+                    if (numberofimage == 1)
 
                     {
                         ImageInString[1] = encodedImage;
@@ -2790,15 +2799,11 @@ public class TaskActivity extends AppCompatActivity {
                         String s[] = contentURI.toString().split("/");
                         nameOfimage[1] = s[s.length - 1] + ".jpg";
 
-                        if(imagename1.getText().toString()!="") {
+                        if (imagename1.getText().toString() != "") {
                             imagename.setText(s[s.length - 1] + ".jpg");
                             thubnail.setBackground(img);
                             imagelayout.setVisibility(View.VISIBLE);
-                        }
-
-
-                        else
-                        {
+                        } else {
 
                             imagename1.setText(s[s.length - 1] + ".jpg");
                             thubnail1.setBackground(img);
@@ -2806,12 +2811,12 @@ public class TaskActivity extends AppCompatActivity {
 
                         }
                         FlagForAttachment = true;
-                        numberofimage=2;
+                        numberofimage = 2;
 
                     }
 
 
-                    if(numberofimage==0) {
+                    if (numberofimage == 0) {
 
                         ImageInString[0] = encodedImage;
 
@@ -2823,7 +2828,7 @@ public class TaskActivity extends AppCompatActivity {
                         thubnail.setBackground(img);
                         imagelayout.setVisibility(View.VISIBLE);
                         FlagForAttachment = true;
-                        numberofimage=1;
+                        numberofimage = 1;
                     }
 
 
@@ -2847,8 +2852,6 @@ public class TaskActivity extends AppCompatActivity {
                     insertPoint.addView(v, insertPoint.getChildCount()-1, new ViewGroup.LayoutParams(300, 300));
 
                           */
-
-
 
 
                     //  thubnail.setCompoundDrawables(img,null,null,null);
@@ -2898,19 +2901,7 @@ public class TaskActivity extends AppCompatActivity {
     }
 
 
-    private String getStringImage(File file) {
-        try {
-            FileInputStream fin = new FileInputStream(file);
-            byte[] imageBytes = new byte[(int) file.length()];
-            fin.read(imageBytes, 0, imageBytes.length);
-            fin.close();
-            return Base64.encodeToString(imageBytes, Base64.DEFAULT);
-        } catch (Exception ex) {
-            Log.e("tag", Log.getStackTraceString(ex));
 
-        }
-        return null;
-    }
 
     private void launchMediaScanIntent() {
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
@@ -3087,7 +3078,7 @@ public class TaskActivity extends AppCompatActivity {
     }
 
 
-    private class AsyncTaskGetUserInfo extends AsyncTask<String, Void, String> {
+    public class AsyncTaskGetUserInfo extends AsyncTask<String, Void, String> {
 
         ProgressDialog pd = new ProgressDialog(TaskActivity.this);
 
@@ -3113,7 +3104,7 @@ public class TaskActivity extends AppCompatActivity {
             HttpClient Client = new DefaultHttpClient();
 
             // Create URL string
-            URL = "https://na1.salesforce.com/services/data/v41.0/sobjects/User/"+UserId;
+            URL = "https://na1.salesforce.com/services/data/v41.0/sobjects/User/" + UserId;
 
             //  String URL = myTokens.get_instance_url()+"/services/data/v24.0/query?q=SELECT%20ID%2CNAME%20FROM%20ACCOUNT";
 
@@ -3154,9 +3145,9 @@ public class TaskActivity extends AppCompatActivity {
                     JSONObject obj = new JSONObject(s.toString());
 
 
-                    String name=obj.getString("Name");
-                    String photourl=obj.getString("MediumPhotoUrl");
-                    Log.d(TAG, "onPostExecute:"+photourl);
+                    String name = obj.getString("Name");
+                    String photourl = obj.getString("MediumPhotoUrl");
+                    Log.d(TAG, "onPostExecute:" + photourl);
 
                     URL url = null;
                     try {
@@ -3164,20 +3155,19 @@ public class TaskActivity extends AppCompatActivity {
                     } catch (MalformedURLException e) {
                         e.printStackTrace();
                     }
-                 //   Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                 //   IMAGEofuser.setImageBitmap(bmp);
+                    //   Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                    //   IMAGEofuser.setImageBitmap(bmp);
 
 
-                    Picasso.Builder builder = new Picasso.Builder(TaskActivity.this).downloader(new OkHttp3Downloader(TaskActivity.this,Integer.MAX_VALUE));;
-                    builder.listener(new Picasso.Listener()
-                    {
+                    Picasso.Builder builder = new Picasso.Builder(TaskActivity.this).downloader(new OkHttp3Downloader(TaskActivity.this, Integer.MAX_VALUE));
+                    ;
+                    builder.listener(new Picasso.Listener() {
                         @Override
-                        public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception)
-                        {
+                        public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
                             exception.printStackTrace();
                         }
                     });
-                    builder.build().load(photourl).error(R.drawable.cast_mini_controller_progress_drawable).resize(200,200).into(IMAGEofuser);
+                    builder.build().load(photourl).error(R.drawable.cast_mini_controller_progress_drawable).resize(200, 200).into(IMAGEofuser);
 
 
                  /*   Picasso.with(getApplicationContext()).load(photourl) .error(R.drawable.arrow).resize(30,30).centerCrop().into(IMAGEofuser, new Callback() {
@@ -3192,26 +3182,23 @@ public class TaskActivity extends AppCompatActivity {
                         }
                     });
                     */
-              //    Glide.with(getApplicationContext())
-              //              .load(photourl).into(IMAGEofuser);
+                    //    Glide.with(getApplicationContext())
+                    //              .load(photourl).into(IMAGEofuser);
 
 
-               //     RequestOptions options = new RequestOptions()
-              //              .centerCrop()
-               //             .placeholder(R.drawable.arrow);
+                    //     RequestOptions options = new RequestOptions()
+                    //              .centerCrop()
+                    //             .placeholder(R.drawable.arrow);
 //
 
 
+                    //     Glide.with(getApplicationContext()).load("https://veloxyapptest-dev-ed--c.ap5.content.force.com/profilephoto/005/F").apply(options).into(IMAGEofuser);
 
-               //     Glide.with(getApplicationContext()).load("https://veloxyapptest-dev-ed--c.ap5.content.force.com/profilephoto/005/F").apply(options).into(IMAGEofuser);
-                            
 
                     nameofuser.setText(name);
 
 
-
-                        //start_date.setText("");
-
+                    //start_date.setText("");
 
 
                 } catch (JSONException e) {
@@ -3223,45 +3210,23 @@ public class TaskActivity extends AppCompatActivity {
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    private String encodeImage(Bitmap bm) {
+    private String encodeImage(Bitmap bm) throws UnsupportedEncodingException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        Charset iso8859_15 = Charset.forName("ISO-8859-15");
 
-        bm.compress(Bitmap.CompressFormat.JPEG, 30, baos);
+        bm.compress(Bitmap.CompressFormat.PNG, 30, baos);
 
         byte[] b = baos.toByteArray();
-        String encImage = Base64.encodeToString(b, Base64.DEFAULT);
+        byte[] encodedBytes = Base64.encodeBase64(b);
 
 
-        return encImage;
+            System.out.println("encodedBytes " + new String(encodedBytes,iso8859_15));
+
+        //   String encImage = Base64.encode(b, Base64.DEFAULT);
+      //  Base64.encodeBase64("Test".getBytes());
+
+        return new String(encodedBytes,iso8859_15);
     }
-
-
 
 
     public Bitmap getResizedBitmap(Bitmap image, int maxSize) {
