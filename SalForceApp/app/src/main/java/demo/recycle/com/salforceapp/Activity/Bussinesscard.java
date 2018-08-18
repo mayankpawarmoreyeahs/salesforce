@@ -1,17 +1,27 @@
 package demo.recycle.com.salforceapp.Activity;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.SparseArray;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
+
+import com.google.android.gms.vision.CameraSource;
+import com.google.android.gms.vision.Detector;
 import com.googlecode.tesseract.android.TessBaseAPI;
 
 import com.google.android.gms.vision.Frame;
@@ -27,17 +37,38 @@ import demo.recycle.com.salforceapp.R;
 public class Bussinesscard extends AppCompatActivity {
 
     private static final int CAMERA = 1;
-    TextView BusinessCard;
+    TextView businessCardtext;
     private static final String DATA_PATH = Environment.getExternalStorageDirectory().toString() + "/TesseractSample/";
+    SurfaceView  cameraView;
+    CameraSource mCameraSource;
+    Button scan,back;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bussinesscard);
-        BusinessCard=(TextView)findViewById(R.id.textView);
+        businessCardtext=(TextView)findViewById(R.id.textView);
+        cameraView = (SurfaceView) findViewById(R.id.surface_view);
+        scan=(Button)findViewById(R.id.scan);
+        back=(Button)findViewById(R.id.back);
 
-        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(cameraIntent, CAMERA);
+        scan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                finish();
+
+            }
+        });
+
+               startCameraSource();
 
 
 
@@ -45,93 +76,90 @@ public class Bussinesscard extends AppCompatActivity {
     }
 
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+
+    private void startCameraSource() {
+
+        //Create the TextRecognizer
+        final TextRecognizer textRecognizer = new TextRecognizer.Builder(getApplicationContext()).build();
+
+        if (!textRecognizer.isOperational()) {
+            Log.w("TAG", "Detector dependencies not loaded yet");
+        } else {
+
+            //Initialize camerasource to use high resolution and set Autofocus on.
+            mCameraSource = new CameraSource.Builder(getApplicationContext(), textRecognizer)
+                    .setFacing(CameraSource.CAMERA_FACING_BACK)
+                    .setRequestedPreviewSize(1280, 1024)
+                    .setAutoFocusEnabled(true)
+                    .setRequestedFps(2.0f)
+                    .build();
+
+            /**
+             * Add call back to SurfaceView and check if camera permission is granted.
+             * If permission is granted we can start our cameraSource and pass it to surfaceView
+             */
+            cameraView.getHolder().addCallback(new SurfaceHolder.Callback() {
+                @Override
+                public void surfaceCreated(SurfaceHolder holder) {
+                    try {
+
+                        if (ActivityCompat.checkSelfPermission(getApplicationContext(),
+                                Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
 
 
-        if (requestCode == CAMERA) {
-
-
-            Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-
-
-            Uri tempUri = getImageUri(getApplicationContext(),bitmap);
-
-            // CALL THIS METHOD TO GET THE ACTUAL PATH
-            Bitmap bitmap1 = null;
-            try {
-
-                bitmap1 = MediaStore.Images.Media.getBitmap(this.getContentResolver(), tempUri);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-
-        /*    try {
-                BusinessCard.setText(extractText(bitmap));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            */
-
-
-            TextRecognizer text = new TextRecognizer.Builder(getApplicationContext()).build();
-            if (!text.isOperational()) {
-
-            } else {
-                Frame frame = new Frame.Builder().setBitmap(bitmap1).build();
-                SparseArray<TextBlock> items = text.detect(frame);
-                StringBuilder sb = new StringBuilder();
-                for (int i = 0; i < items.size(); i++) {
-                    TextBlock myitem = items.valueAt(i);
-                    sb.append(myitem.getValue());
-                    sb.append("\n");
-                    BusinessCard.setText(sb);
-
+                            return;
+                        }
+                        mCameraSource.start(cameraView.getHolder());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
 
+                @Override
+                public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+                }
 
-            }
+                /**
+                 * Release resources for cameraSource
+                 */
+                @Override
+                public void surfaceDestroyed(SurfaceHolder holder) {
+                    mCameraSource.stop();
+                }
+            });
 
+            //Set the TextRecognizer's Processor.
+            textRecognizer.setProcessor(new Detector.Processor<TextBlock>() {
+                @Override
+                public void release() {
+                }
+
+                /**
+                 * Detect all the text from camera using TextBlock and the values into a stringBuilder
+                 * which will then be set to the textView.
+                 * */
+                @Override
+                public void receiveDetections(Detector.Detections<TextBlock> detections) {
+                    final SparseArray<TextBlock> items = detections.getDetectedItems();
+                    if (items.size() != 0 ){
+
+                        businessCardtext.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                StringBuilder stringBuilder = new StringBuilder();
+                                for(int i=0;i<items.size();i++){
+                                    TextBlock item = items.valueAt(i);
+                                    stringBuilder.append(item.getValue());
+                                    stringBuilder.append("\n");
+                                }
+                                businessCardtext.setText(stringBuilder.toString());
+                            }
+                        });
+                    }
+                }
+            });
         }
-
-
     }
-
-
-    private String extractText(Bitmap bitmap) throws Exception
-    {
-        TessBaseAPI tessBaseApi = new TessBaseAPI();
-        tessBaseApi.init(DATA_PATH, "eng");
-        tessBaseApi.setImage(bitmap);
-        String extractedText = tessBaseApi.getUTF8Text();
-        tessBaseApi.end();
-        return extractedText;
-    }
-
-
-
-    public Uri getImageUri(Context inContext, Bitmap inImage) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
-        return Uri.parse(path);
-    }
-
-    public String getRealPathFromURI(Uri uri) {
-        Cursor cursor = getContentResolver().query(uri, null, null, null, null);
-        cursor.moveToFirst();
-        int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
-        return cursor.getString(idx);
-    }
-
-
-
-
-
-
 
 
 }
