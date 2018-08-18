@@ -82,7 +82,8 @@
         <activity
             android:name=".Activity.CreateTaskActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".Activity.Bussinesscard"></activity>
+        <activity android:name=".Activity.Bussinesscard" />
+        <activity android:name=".Activity.BusinessCardDisplay"></activity>
     </application>
 
 </manifest>

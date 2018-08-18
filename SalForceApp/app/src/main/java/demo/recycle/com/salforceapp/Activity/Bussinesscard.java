@@ -56,6 +56,8 @@ public class Bussinesscard extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+
+
             }
         });
 
