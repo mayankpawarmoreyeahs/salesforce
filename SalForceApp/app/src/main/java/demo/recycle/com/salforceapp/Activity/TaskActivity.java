@@ -318,6 +318,12 @@ public class TaskActivity extends AppCompatActivity {
 
                                 break;
 
+
+
+                            case R.id.get_business:
+                                startActivity(new Intent(TaskActivity.this, Bussinesscard.class));
+                                break;
+
                             case R.id.logout:
 
                                 mDrawerLayout.closeDrawers();
@@ -368,6 +374,8 @@ public class TaskActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         ActionBar actionbar = getSupportActionBar();
         actionbar.setHomeAsUpIndicator(R.drawable.ic_menu_blac);
+
+
         actionbar.setDisplayHomeAsUpEnabled(true);
 
 
