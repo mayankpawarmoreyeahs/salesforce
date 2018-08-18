@@ -8,6 +8,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:datePickerDialogTheme">@style/Dialogtheme</item>
+        <item name="drawerArrowStyle">@style/DrawerIcon</item>
     </style>
     <!-- Base application theme. -->
     <style name="AppTheme.NoActionBar">
@@ -38,6 +39,10 @@
 
     <style name="Dialogtheme" parent="Theme.AppCompat.Light.Dialog">
         <item name="colorAccent">@color/colorPrimary</item>
+    </style>
+
+    <style name="DrawerIcon" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="color">#ffffff</item>
     </style>
 
 </resources>

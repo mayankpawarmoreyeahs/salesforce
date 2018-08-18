@@ -1,0 +1,19 @@
+{
+    "logs": [
+        {
+            "outputFile": "C:\\Users\\User.MDEVPC-40\\Desktop\\salesforce\\SalForceApp\\knife\\build\\intermediates\\incremental\\mergeDebugAndroidTestResources\\merged.dir\\values\\values.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\User.MDEVPC-40\\Desktop\\salesforce\\SalForceApp\\knife\\build\\intermediates\\bundles\\debug\\res\\values\\values.xml",
+                    "from": {
+                        "startLines": "3",
+                        "startColumns": "4",
+                        "startOffsets": "660",
+                        "endColumns": "42",
+                        "endOffsets": "698"
+                    }
+                }
+            ]
+        }
+    ]
+}

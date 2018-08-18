@@ -45,8 +45,11 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="40dp"
-                    android:text="SalesForce"
+                   android:layout_marginRight="50dp"
+                    android:layout_gravity="center"
+                 android:gravity="center"
+                    android:textColor="#ffffff"
+                    android:text="@string/app_name"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
                     /></LinearLayout>
             <ImageView
