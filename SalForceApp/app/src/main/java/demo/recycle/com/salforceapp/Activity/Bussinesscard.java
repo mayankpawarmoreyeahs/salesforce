@@ -31,7 +31,9 @@ import com.google.android.gms.vision.text.TextRecognizer;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -49,12 +51,17 @@ public class Bussinesscard extends AppCompatActivity {
     CameraSource mCameraSource;
     Button scan,back;
 
-    StringBuilder name;
-    StringBuilder address;
-    StringBuilder[] emailstring=new StringBuilder[5];
-    StringBuilder[] phone=new StringBuilder[5];
-    HashSet<StringBuilder>  phonenumber=new HashSet<StringBuilder>();
-    HashSet<StringBuilder>  emailnumber=new HashSet<StringBuilder>();
+    Set<String> hash_SetEMAIL = new HashSet<String>();
+    Set<String> hash_SetPhone=new HashSet<String>();
+    Set<String> hash_SetAdd=new HashSet<String>();
+
+    Set  addressnumber=new HashSet();
+    Set  phonenumber=new HashSet();
+    Set  emailnumber=new HashSet();
+
+    String[]  addressnumberintostring=new String[100];
+    String[]  phonenumberintostring=new String[100];
+    String[]  emailnumbertostyring=new String[1000];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,11 +77,77 @@ public class Bussinesscard extends AppCompatActivity {
             public void onClick(View v) {
 
 
-                Log.d("mayank", "onClick:1"+businessCardtext.getText());
+                Log.d("TAG", "onClick: "+hash_SetEMAIL.toString());
+                Log.d("TAG", "onClick: "+hash_SetPhone.toString());
+
+              HashSet<String> hashSet= new HashSet<String>();
+
+              for(int i=0;i<hash_SetAdd.toString().split(" ").length;i++) {
+                  hashSet.add(hash_SetAdd.toString().split(" ")[i]);
+
+              }
+                Log.d("TAG", "onClick1: "+hash_SetAdd.toString());
+
+/*
+                Log.d("mayank", "onClick:1"+phonenumberintostring.toString());
+                Log.d("mayank", "onClick:2"+addressnumberintostring.toString());
+                Log.d("mayank", "onClick:3"+emailnumbertostyring.toString());
+           String[] array = new HashSet<String>(Arrays.asList(emailnumbertostyring)).toArray(new String[0]);
 
 
 
 
+                for(int i=0;i<array.length;i++)
+           {
+               Log.d("mayank", "on"+array[i]);
+
+
+
+           }
+
+
+
+                String duplicatePattern = "\\b([\\w\\s']+) \\1\\b";
+                Pattern p = Pattern.compile(duplicatePattern);
+                for (String phrase : array) {
+                    Matcher m = p.matcher(phrase);
+                    if (m.matches()) {
+                        System.out.println(m.group(1));
+                        Log.d("TAG", "onClick: "+m.group(1));
+                    } else {
+                        System.out.println(phrase);
+                    }
+                }
+
+
+
+
+                Log.d("mayank", "onClick:1"+addressnumber);
+                Log.d("mayank", "onClick:2"+phonenumber);
+                Log.d("mayank", "onClick:3"+emailnumber);
+
+                StringBuilder stringBuilder=new StringBuilder();
+
+
+
+
+                for (   Object s : emailnumber) {
+
+                    stringBuilder.append(" "+s.toString());
+                }
+
+
+            Log.d("mayank",deDup(stringBuilder.toString()));
+
+
+           /*     for(int i=0;i<emailnumber.size();i++)
+                {
+
+                    emailnumber.
+
+                }
+
+              */
 
 
 
@@ -98,7 +171,9 @@ public class Bussinesscard extends AppCompatActivity {
 
     }
 
-
+    public String deDup(String s) {
+        return new LinkedHashSet<String>(Arrays.asList(s.split("-"))).toString().replaceAll("(^\\[|\\]$)", "").replace(", ", "-");
+    }
 
     private void startCameraSource() {
 
@@ -196,7 +271,7 @@ public class Bussinesscard extends AppCompatActivity {
 
 
 
-                                    Pattern pattern = Pattern.compile("\\d{3}-\\d{3}-\\d{4}");
+                         /*           Pattern pattern = Pattern.compile("\\d{3}-\\d{3}-\\d{4}");
                                     Matcher matcher = pattern.matcher(item.getValue());
                                     if (matcher.find()) {
 
@@ -218,23 +293,56 @@ public class Bussinesscard extends AppCompatActivity {
                                         phonenum.append(matcher3.group(0));
                                     }
 
-                                    Pattern pattern4 = Pattern.compile("\\\\d{10}|(?:\\\\d{3}-){2}\\\\d{4}|\\\\(\\\\d{3}\\\\)\\\\d{3}-?\\\\d{4}");
-                                    Matcher matcher4 = pattern3.matcher(item.getValue());
+
+
+                                    Pattern pattern4 = Pattern.compile("(?:\\d+\\s*)+");
+                                    Matcher matcher4 = pattern4.matcher(item.getValue());
                                     if (matcher4.find()) {
 
+                                        phonenum.append(matcher4.group(0));
+                                    }
+
+*/
+
+                                    Pattern pattern = Pattern.compile("\\d{10}");
+                                    Matcher matcher = pattern.matcher(item.getValue());
+                                    if (matcher.find()) {
+                                        hash_SetPhone.add(matcher.group(0));
+                                        phonenum.append(matcher.group(0));
+                                        phonenum.trimToSize();
+                                    }
+
+
+                                    Pattern pattern1 = Pattern.compile("\\d{3}[-\\.\\s]\\d{3}[-\\.\\s]\\d{4}");
+                                    Matcher matcherP = pattern1.matcher(item.getValue());
+                                    if (matcherP.find()) {
+
+                                        hash_SetPhone.add(matcherP.group(0));
+
+                                        phonenum.append(matcherP.group(0));
+                                        phonenum.trimToSize();
+                                    }
+
+                                    Pattern pattern3 = Pattern.compile("\\d{3}-\\d{3}-\\d{4}\\s(x|(ext))\\d{3,5}");
+                                    Matcher matcher3 = pattern3.matcher(item.getValue());
+                                    if (matcher3.find()) {
+
+                                        hash_SetPhone.add(matcher3.group(0));
+
                                         phonenum.append(matcher3.group(0));
+                                        phonenum.trimToSize();
                                     }
 
 
 
-                                    String regex = "^[a-zA-Z][\\w\\.-]*[a-zA-Z0-9]@[a-zA-Z0-9][\\w\\.-]*[a-zA-Z0-9]\\.[a-zA-Z][a-zA-Z\\.]*[a-zA-Z]$";
+                                    Pattern pattern4 = Pattern.compile("\\(\\d{3}\\)-\\d{3}-\\d{4}");
+                                    Matcher matcher4 = pattern4.matcher(item.getValue());
+                                    if (matcher4.find()) {
 
-                                    Pattern email = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+                                        hash_SetPhone.add(matcher4.group(0));
 
-                                    Matcher m = email.matcher(item.getValue());
-                                    if (m.find()) {
-
-                                        emailstring.append(m.group(0));
+                                        phonenum.append(matcher4.group(0));
+                                        phonenum.trimToSize();
                                     }
 
 
@@ -246,11 +354,36 @@ public class Bussinesscard extends AppCompatActivity {
                                     Matcher matcher1 = add.matcher(item.getValue());
                                     if (matcher1.find()) {
 
+                                        hash_SetAdd.add(matcher1.group(0));
+
                                         addressstring.append(matcher1.group(0));
                                     }
 
 
-                                    Log.d("mayank", addressstring+"adress"+emailstring+"email"+phonenum+"phone");
+
+                                    String regex = "^[a-zA-Z][\\w\\.-]*[a-zA-Z0-9]@[a-zA-Z0-9][\\w\\.-]*[a-zA-Z0-9]\\.[a-zA-Z][a-zA-Z\\.]*[a-zA-Z]$";
+
+                                    Pattern email = Pattern.compile("[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+");
+
+                                    Matcher m = email.matcher(item.getValue());
+                                    if (m.find()) {
+
+                                        hash_SetEMAIL.add(m.group(0));
+
+                                    }
+
+
+
+
+
+
+
+                                    phonenumber.add(phonenum);
+                                    phonenumberintostring[i]=phonenum.toString();
+                                    emailnumbertostyring[i]=emailnumber.toString();
+                                    addressnumberintostring[i]=addressnumber.toString();
+                                    emailnumber.add(emailstring);
+                                    addressnumber.add(addressstring);
                                     businessCardtext.setText(stringBuilder.toString());
 
                                 }
